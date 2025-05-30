@@ -2,9 +2,9 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\StudentsResource\Pages;
-use App\Filament\Resources\StudentsResource\RelationManagers;
-use App\Models\Student;
+use App\Filament\Resources\StudentResource\Pages;
+use App\Filament\Resources\StudentResource\RelationManagers;
+use App\Models\student;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -18,12 +18,11 @@ use Filament\Forms\Components\Select;
 use Spatie\Permission\Models\Role;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Components\FileUpload;
-
-class StudentsResource extends Resource
+class StudentResource extends Resource
 {
     protected static ?string $model = Student::class;
-
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationGroup = 'Management';
+    protected static ?string $navigationIcon = 'heroicon-o-user-group';
 
     public static function form(Form $form): Form
     {
@@ -72,9 +71,10 @@ class StudentsResource extends Resource
                         'L' => 'Laki-laki',
                         'P' => 'Perempuan',
                         default => 'Tidak Diketahui',
-                    }),                TextColumn::make('phone')->sortable()->searchable(),
+                    }),                
+                TextColumn::make('phone')->sortable()->searchable(),
                 TextColumn::make('email')->sortable()->searchable(),
-                TextColumn::make('status_pkl')
+                TextColumn::make('internship_status')
                     ->label('Status PKL')
                     ->sortable()
                     ->formatStateUsing(fn ($state) => $state == 1 ? 'Terverifikasi' : 'Belum Terverifikasi'),
@@ -103,8 +103,8 @@ class StudentsResource extends Resource
     {
         return [
             'index' => Pages\ListStudents::route('/'),
-            'create' => Pages\CreateStudents::route('/create'),
-            'edit' => Pages\EditStudents::route('/{record}/edit'),
+            'create' => Pages\CreateStudent::route('/create'),
+            'edit' => Pages\EditStudent::route('/{record}/edit'),
         ];
     }
 }

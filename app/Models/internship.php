@@ -16,4 +16,19 @@ class internship extends Model
         'start_date',
         'end_date',
     ];
+    public function student()
+    {
+        return $this->belongsTo(student::class, 'siswa_id');
+    }
+
+    public function industry()
+    {
+        return $this->belongsTo(industry::class, 'industri_id');
+    }
+
+    public function teacher()
+    {
+        return $this->belongsTo(teacher::class, 'guru_id');
+    }
+
 }

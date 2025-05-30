@@ -1,25 +1,19 @@
 <?php
 
-namespace App\Filament\Resources\StudentsResource\Pages;
+namespace App\Filament\Resources\StudentResource\Pages;
 
-use App\Filament\Resources\StudentsResource;
+use App\Filament\Resources\StudentResource;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
 
-class EditStudents extends EditRecord
+class EditStudent extends EditRecord
 {
-    protected static string $resource = StudentsResource::class;
+    protected static string $resource = StudentResource::class;
 
     protected function getHeaderActions(): array
     {
         return [
             Actions\DeleteAction::make(),
         ];
-        
     }
-    protected function getRedirectUrl(): string
-    {
-        return $this->getResource()::getUrl('index');
-    }
-
 }

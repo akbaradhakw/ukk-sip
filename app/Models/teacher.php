@@ -16,4 +16,15 @@ class teacher extends Model
         'phone',
         'email',
     ];
+
+    public function industry()
+    {
+        return $this->hasMany(industry::class);
+    }
+    
+    public function intership()
+    {
+        return $this->hasMany(intership::class);
+    }
+
 }

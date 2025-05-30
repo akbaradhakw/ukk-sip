@@ -11,10 +11,21 @@ class industry extends Model
     protected $table = 'industries';
     protected $fillable = [
         'name',
-        'business fields',
+        'business_fields',
         'address',
         'phone',
         'email',
         'website',
+        'logo',
     ];
+    public function teacher()
+    {
+        return $this->belongsTo(teacher::class, 'guru_pembimbing');
+    }
+    
+    public function intership()
+    {
+        return $this->hasMany(intership::class);
+    }
+
 }

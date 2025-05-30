@@ -4,7 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\TeacherResource\Pages;
 use App\Filament\Resources\TeacherResource\RelationManagers;
-use App\Models\Teacher;
+use App\Models\teacher;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -19,8 +19,8 @@ class TeacherResource extends Resource
 {
     protected static ?string $model = Teacher::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
-
+    protected static ?string $navigationIcon = 'heroicon-o-academic-cap';
+    protected static ?string $navigationGroup = 'Management';
     public static function form(Form $form): Form
     {
         return $form
@@ -37,7 +37,18 @@ class TeacherResource extends Resource
                     ->sortable()
                     ->searchable()
                     ->label('Nama'),
-                TextColumn::make('nip')
+                TextColumn::make('nip'),
+                TextColumn::make('gender')
+                    ->label('Gender')
+                    ->sortable()
+                    ->searchable()
+                    ->formatStateUsing(fn ($state) => match ($state) {
+                        'L' => 'Laki-laki',
+                        'P' => 'Perempuan',
+                        default => 'Tidak Diketahui',
+                    }),  
+                TextColumn::make('phone')->sortable()->searchable(),
+                TextColumn::make('email')->sortable()->searchable(),
             ])
             ->filters([
                 //
