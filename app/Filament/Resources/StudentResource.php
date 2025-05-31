@@ -48,7 +48,7 @@ class StudentResource extends Resource
                     ->directory('foto-profil')    // simpan di folder storage/app/public/foto-profil
                     ->visibility('public')         // supaya bisa diakses publik
                     ->nullable(),                  // boleh kosong
-                Toggle::make('status_pkl')
+                Toggle::make('internship_status')
                     ->label('Status PKL')
                     ->default(false)
                     ->inline()
