@@ -8,17 +8,17 @@ class internship extends Model
 {
     use \Illuminate\Database\Eloquent\Factories\HasFactory;
 
-    protected $table = 'internship';
+    protected $table = 'internships';
     protected $fillable = [
         'student_id',
         'teacher_id',
         'industry_id',
-        'start_date',
-        'end_date',
+        'start',
+        'end',
     ];
     protected $casts = [
-        'start_date' => 'date',
-        'end_date' => 'date',
+        'start' => 'date',
+        'end' => 'date',
     ];
     public function student()
     {
