@@ -8,7 +8,7 @@ class internship extends Model
 {
     use \Illuminate\Database\Eloquent\Factories\HasFactory;
 
-    protected $table = 'internships';
+    protected $table = 'internship';
     protected $fillable = [
         'student_id',
         'teacher_id',
@@ -16,19 +16,23 @@ class internship extends Model
         'start_date',
         'end_date',
     ];
+    protected $casts = [
+        'start_date' => 'date',
+        'end_date' => 'date',
+    ];
     public function student()
     {
-        return $this->belongsTo(student::class, 'siswa_id');
+        return $this->belongsTo(student::class, 'student_id');
     }
 
     public function industry()
     {
-        return $this->belongsTo(industry::class, 'industri_id');
+        return $this->belongsTo(industry::class, 'industry_id');
     }
 
     public function teacher()
     {
-        return $this->belongsTo(teacher::class, 'guru_id');
+        return $this->belongsTo(teacher::class, 'teacher_id');
     }
 
 }
