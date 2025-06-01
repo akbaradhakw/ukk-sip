@@ -18,4 +18,8 @@ class student extends Model
         'photo',
         'internship_status',
     ];
+    public function internship()
+    {
+        return $this->hasOne(internship::class);
+    }
     }

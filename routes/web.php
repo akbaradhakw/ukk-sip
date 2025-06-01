@@ -12,9 +12,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
         return Inertia::render('dashboard');
     })->name('dashboard');
 Route::get('/industries', function () {
-        return Inertia::render('industries/index');
+        return Inertia::render('industries');
     })->name('industries');
 });
-
+Route::resource('/industries', App\Http\Controllers\IndustriesCotroller::class);
+Route::resource('/dashboard', App\Http\Controllers\DashboardController::class);
 require __DIR__.'/settings.php';
 require __DIR__.'/auth.php';

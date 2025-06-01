@@ -14,13 +14,8 @@ const mainNavItems: NavItem[] = [
         icon: LayoutGrid,
     },
     {
-        title: 'industries',
+        title: 'Industries',
         href: '/industries',
-        icon: LayoutGrid,
-    },
-        {
-        title: 'LaporPKL',
-        href: '/laporpkl',
         icon: LayoutGrid,
     },
 ];

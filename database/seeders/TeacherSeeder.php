@@ -13,6 +13,7 @@ class TeacherSeeder extends Seeder
      */
     public function run(): void
     {
+        $studentRole = Role::firstOrCreate(['name' => 'teacher']);
         $gurus = teacher::insert([
             [
                 'name' => 'Sugiarto, ST', 
