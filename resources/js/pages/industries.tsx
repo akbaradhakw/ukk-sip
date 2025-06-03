@@ -1,100 +1,154 @@
 import AppLayout from '@/layouts/app-layout';
+import { Head, Link, useForm } from '@inertiajs/react';
 import { type BreadcrumbItem } from '@/types';
-import { Head } from '@inertiajs/react';
-import { Mail, Phone, MapPin, User, Briefcase } from 'lucide-react';
+import { Mail, Phone, MapPin, Globe, Briefcase } from 'lucide-react';
+import { useEffect } from 'react';
 
 const breadcrumbs: BreadcrumbItem[] = [
-    {
-        title: 'Industries',
-        href: '/industries',
-    },
+  {
+    title: 'Industries',
+    href: '/industries',
+  },
 ];
 
 type Industry = {
-    id: number;
-    name: string;
-    business_fields: string;
-    address: string;
-    phone: string;
-    email: string;
-    website: string;
-    logo: string | null;
+  id: number;
+  name: string;
+  business_fields: string;
+  address: string;
+  phone: string;
+  email: string;
+  website: string;
+  logo: string | null;
+};
+
+type PaginatedIndustries = {
+  data: Industry[];
+  links: {
+    url: string | null;
+    label: string;
+    active: boolean;
+  }[];
 };
 
 type Props = {
-    industries: Industry[];
+  industries: PaginatedIndustries;
+  filters: {
+    search: string;
+  };
 };
 
-export default function Industries({ industries }: Props) {
-    return (
-        <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="Industries" />
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {industries.map((industry) => (
-                    <div
-                    key={industry.id}
-                    className="bg-gradient-to-br from-cyan-600 to-blue-500 text-white rounded-xl shadow-md p-4 space-y-3 transform transition duration-300 hover:scale-105 hover:shadow-lg cursor-pointer"
-                    >
-                    <div className="flex items-center justify-between mb-2">
-                        <h2 className="text-lg font-semibold">
-                        CV. {industry.name}
-                        </h2>
-                        <div className="bg-white/20 p-2 rounded-full">
-                        <Briefcase size={20} />
-                        </div>
-                    </div>
+function Pagination({ links }: { links: PaginatedIndustries['links'] }) {
+  return (
+    <div className="mt-8 flex flex-wrap justify-center gap-2">
+      {links.map((link, index) => (
+        <Link
+          key={index}
+          href={link.url ?? ''}
+          preserveScroll
+          preserveState
+          dangerouslySetInnerHTML={{ __html: link.label }}
+          className={`px-3 py-1 rounded text-sm ${
+            link.active
+              ? 'bg-white text-indigo-600 font-semibold'
+              : 'bg-indigo-800 text-white hover:bg-indigo-700'
+          } ${!link.url ? 'pointer-events-none opacity-50' : ''}`}
+        />
+      ))}
+    </div>
+  );
+}
 
-                    <div className="bg-white/10 rounded-lg p-4 space-y-2">
-                        {/* <div className="flex items-center gap-2">
-                        <User size={16} />
-                        <span className="font-medium">
-                            {industry.owner ?? 'N/A'}
-                        </span>
-                        </div> */}
+export default function Industries({ industries, filters }: Props) {
+  const { data, setData, get } = useForm({
+    search: filters.search || '',
+  });
 
-                        <div className="flex items-center gap-2">
-                        <Briefcase size={16} />
-                        <span>{industry.business_fields}</span>
-                        </div>
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      get('/industries', {
+        preserveState: true,
+        preserveScroll: true,
+      });
+    }, 500);
 
-                        <div className="flex items-center gap-2">
-                        <Mail size={16} />
-                        <a
-                            href={`mailto:${industry.email}`}
-                            className="underline text-white hover:text-gray-200"
-                        >
-                            {industry.email}
-                        </a>
-                        </div>
+    return () => clearTimeout(timeout); // clear timeout saat component unmount / input berubah
+  }, [data.search]);
 
-                        <div className="flex items-center gap-2">
-                        <Phone size={16} />
-                        <span>{industry.phone}</span>
-                        </div>
+  return (
+    <AppLayout breadcrumbs={breadcrumbs}>
+      <Head title="Industries" />
 
-                        <div className="flex items-center gap-2">
-                        <MapPin size={16} />
-                        <span className="truncate">{industry.address}</span>
-                        </div>
+      <div className="bg-indigo-950 p-5 space-y-6 min-h-screen">
+        <h2 className="text-white text-2xl font-bold">Daftar Industri</h2>
 
-                        {industry.website && (
-                        <div className="flex items-center gap-2">
-                            <span>🌐</span>
-                            <a
-                            href={industry.website}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="underline text-white hover:text-gray-200"
-                            >
-                            {industry.website}
-                            </a>
-                        </div>
-                        )}
-                    </div>
-                    </div>
-                ))}
+        {/* 🔍 Auto-search input */}
+        <input
+          type="text"
+          value={data.search}
+          onChange={(e) => setData('search', e.target.value)}
+          placeholder="Cari nama industri..."
+          className="w-full md:w-1/2 p-3 rounded bg-white text-black focus:outline-none mb-6"
+        />
+
+        {/* 🏭 List of Industries */}
+        {industries.data.map((industry) => (
+          <div
+            key={industry.id}
+            className="bg-gradient-to-br from-cyan-600 to-blue-500 text-white rounded-xl shadow-md p-4 space-y-3 transform transition duration-300 hover:scale-102 hover:shadow-lg cursor-pointer"
+          >
+            <div className="flex items-center justify-between mb-2">
+              <h2 className="text-lg font-semibold">{industry.name}</h2>
+              <div className="bg-white/20 p-2 rounded-full">
+                <Briefcase className="w-4 h-4" />
+              </div>
+            </div>
+
+            <div className="bg-white/10 rounded-lg p-4 space-y-3 text-sm">
+              <div className="flex items-center gap-3">
+                <Briefcase className="w-4 h-4 shrink-0" />
+                <span className="truncate">{industry.business_fields}</span>
+              </div>
+
+              <div className="flex items-center gap-3">
+                <Mail className="w-4 h-4 shrink-0" />
+                <a
+                  href={`mailto:${industry.email}`}
+                  className="underline text-white hover:text-gray-200 truncate"
+                >
+                  {industry.email}
+                </a>
+              </div>
+
+              <div className="flex items-center gap-3">
+                <Phone className="w-4 h-4 shrink-0" />
+                <span>{industry.phone}</span>
+              </div>
+
+              <div className="flex items-center gap-3">
+                <MapPin className="w-4 h-4 shrink-0" />
+                <span className="truncate">{industry.address}</span>
+              </div>
+
+              {industry.website && (
+                <div className="flex items-center gap-3">
+                  <Globe className="w-4 h-4 shrink-0" />
+                  <a
+                    href={industry.website}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="underline text-white hover:text-gray-200 truncate"
+                  >
+                    {industry.website}
+                  </a>
                 </div>
+              )}
+            </div>
+          </div>
+        ))}
 
-        </AppLayout>
-    );
+        <Pagination links={industries.links} />
+      </div>
+    </AppLayout>
+  );
 }

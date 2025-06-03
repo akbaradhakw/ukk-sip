@@ -7,11 +7,21 @@ use Illuminate\Http\Request;
 
 class IndustriesCotroller extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $industries = industry::all();
-        return inertia('industries',[
-            'industries' => $industries
+        $query = Industry::query();
+
+        if ($request->has('search') && $request->search) {
+            $query->where('name', 'like', '%' . $request->search . '%');
+        }
+
+        $industries = $query->latest()->paginate(6)->withQueryString();
+
+        return inertia('industries', [
+            'industries' => $industries,
+            'filters' => [
+                'search' => $request->search,
+            ],
         ]);
     }
 }

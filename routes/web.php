@@ -10,6 +10,8 @@ Route::get('/', function () {
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', function () {
         return Inertia::render('dashboard');
+        Route::get('/internship/create', [InternshipController::class, 'create'])->name('internship.create');
+    Route::post('/internship', [InternshipController::class, 'store'])->name('internship.store');
     })->name('dashboard');
 Route::get('/industries', function () {
         return Inertia::render('industries');
