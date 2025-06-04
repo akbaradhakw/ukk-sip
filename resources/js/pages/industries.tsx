@@ -80,6 +80,7 @@ export default function Industries({ industries, filters }: Props) {
       <Head title="Industries" />
 
       <div className="bg-indigo-950 p-5 space-y-6 min-h-screen">
+        <div className='flex justify-between items-center gap-5'>
         <h2 className="text-white text-2xl font-bold">Daftar Industri</h2>
 
         {/* 🔍 Auto-search input */}
@@ -90,6 +91,11 @@ export default function Industries({ industries, filters }: Props) {
           placeholder="Cari nama industri..."
           className="w-full md:w-1/2 p-3 rounded bg-white text-black focus:outline-none mb-6"
         />
+        <button className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition-colors">
+          Tambah industri 
+        </button>
+        </div>
+
 
         {/* 🏭 List of Industries */}
         {industries.data.map((industry) => (

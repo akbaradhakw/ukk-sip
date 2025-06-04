@@ -18,6 +18,8 @@ use Filament\Forms\Components\Select;
 use Spatie\Permission\Models\Role;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Components\FileUpload;
+use Illuminate\Support\Collection;
+
 class StudentResource extends Resource
 {
     protected static ?string $model = Student::class;
@@ -37,8 +39,38 @@ class StudentResource extends Resource
                     ->maxLength(255),
                 TextInput::make('nis'),
                 TextInput::make('phone')
-                    ->tel()
-                    ->maxLength(15),
+            ->formatStateUsing(function ($state) {
+                if (!$state) return null;
+
+                // Jika sudah ada +62, kembalikan seperti semula
+                if (str_starts_with($state, '+62')) {
+                    return $state;
+                }
+
+                // Jika dimulai dengan 0, hapus 0 dan tambah +62
+                if (str_starts_with($state, '0')) {
+                    return '+62' . substr($state, 1);
+                }
+
+                // Jika tidak dimulai dengan 0 atau +62, tambah +62
+                return '+62' . $state;
+            })
+            ->dehydrateStateUsing(function ($state) {
+                if (!$state) return null;
+
+                // Jika sudah ada +62, kembalikan seperti semula
+                if (str_starts_with($state, '+62')) {
+                    return $state;
+                }
+
+                // Jika dimulai dengan 0, hapus 0 dan tambah +62
+                if (str_starts_with($state, '0')) {
+                    return '+62' . substr($state, 1);
+                }
+
+                // Jika tidak dimulai dengan 0 atau +62, tambah +62
+                return '+62' . $state;
+            }),
                 TextInput::make('address')
                     ->maxLength(500),
                 FileUpload::make('photo')
@@ -86,10 +118,23 @@ class StudentResource extends Resource
                 Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
+                Tables\Actions\BulkAction::make('deleteSelected')
+                    ->label('Hapus yang Belum PKL')
+                    ->requiresConfirmation()
+                    ->action(function (Collection $records) {
+                        // Hanya ambil yang internship_status = false (belum PKL)
+                        $recordsToDelete = $records->filter(function ($record) {
+                            return !$record->internship_status;
+                        });
+
+                        $recordsToDelete->each->delete();
+                    })
+                    ->deselectRecordsAfterCompletion()
+                    ->color('danger')
+                    ->icon('heroicon-o-trash'),
             ]);
+
+            
     }
 
     public static function getRelations(): array

@@ -19,7 +19,7 @@ return new class extends Migration
             FOR EACH ROW
             BEGIN
                 UPDATE students
-                SET status_pkl = true
+                SET internship_status = true
                 WHERE id = NEW.student_id;
             END;
 
