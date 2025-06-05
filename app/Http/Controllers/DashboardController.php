@@ -28,7 +28,10 @@ class DashboardController extends Controller
 
         $pkl = null;
         $hasPklData = false;
-        
+        $internship = null;
+        $hasInternshipData = false;
+        $teacher = null;
+        $industry = null;
 
         if ($student) {
             $internship = internship::where('student_id', $student->id)->latest()->first();

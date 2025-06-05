@@ -2,13 +2,13 @@
 
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
-
+use App\Http\Controllers\DashboardController;
 Route::get('/', function () {
     return Inertia::render('welcome');
 })->name('home');
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('dashboard', function () {
+    Route::get('/dashboard', function () {
         return Inertia::render('dashboard');
     })->name('dashboard');
 
@@ -18,15 +18,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/createindustry', function () {
         return Inertia::render('industryCreate');
     })->name('industries');
-    Route::get('/internship ', [App\Http\Controllers\internshipFormController::class, 'index'])->name('internshipForm');
+    Route::get('/internship', [App\Http\Controllers\internshipFormController::class, 'index'])->name('internshipForm');
     Route::post('/internship', [App\Http\Controllers\internshipFormController::class, 'store'])->name('internship.store');
 
 
 });
 
-Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
 Route::resource('/industries', App\Http\Controllers\IndustriesCotroller::class);
-Route::resource('/dashboard', App\Http\Controllers\DashboardController::class);
+Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
 
 require __DIR__.'/settings.php';
 require __DIR__.'/auth.php';
